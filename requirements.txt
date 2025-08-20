@@ -1,4 +1,13 @@
 flask
-flask-sqlalchemy
+
+# Para Variaveis de Ambiente
 python-dotenv
+
+# Usamos o 'psycopg2-binary' pois é mais fácil de instalar
 psycopg2-binary
+
+# ORM (Mapeamento Objeto-Relacional) para facilitar a interação com o DB
+Flask-SQLAlchemy
+
+# Para gerenciar migrações do banco de dados
+Flask-Migrate
