@@ -11,3 +11,6 @@ Flask-SQLAlchemy
 
 # Para gerenciar migrações do banco de dados
 Flask-Migrate
+
+# Para segurança de senhas (vem com o Flask, mas é bom listar)
+Werkzeug
