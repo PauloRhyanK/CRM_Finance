@@ -8,15 +8,20 @@ services:
       - FLASK_DEBUG=1
       - FLASK_APP=src/app.py
     volumes:
-      - ./src:/app/src
-  database:
-    image: postgres:13
+      - .:/app
+    env_file:
+      - .env  # Carrega as variáveis do .env para a aplicação
+    depends_on:
+      - db    # Garante que o banco suba antes da aplicação
+  db:
+    image: postgres:13-alpine # Usando uma imagem oficial do Postgres
     environment:
-      - POSTGRES_DB=crm
-      - POSTGRES_PASS=123
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
 volumes:
-  db_data:
+  postgres_data:
