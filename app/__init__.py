@@ -7,25 +7,23 @@ from config import DevelopmentConfig
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_app(config_class=DevelopmentConfig):
+def create_app(config_name='development'):
     """
     Função Application Factory.
     """
     # Cria e configura a aplicação Flask
     app = Flask(__name__)
-    app.config.from_object(config_class)
-    
-    # Inicializa as extensões com a aplicação
-    db.init_app(app)
-    migrate.init_app(app, db)
-    
-    # --- Registro dos Blueprints (Rotas) ---
-    # (Adicionaremos nossas rotas aqui no futuro)
-    # Ex: from app.routes.auth_routes import auth_bp
-    #     app.register_blueprint(auth_bp)
 
-    @app.route('/health')
-    def health_check():
-        return "<h1>A aplicação está no ar e funcionando!</h1>", 200
+    if config_name == "development":
+        app.config.from_object('config.DevelopmentConfig')
+    elif config_name == 'production':
+        app.config.from_object('config.ProductionConfig')
+    else:
+        app.config.from_object('config.DefaultConfig')
+
+    app.debug = app.config.get('DEBUG', False)
+
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
     return app

@@ -3,19 +3,17 @@
 import os
 from dotenv import load_dotenv
 
-# Carrega as variáveis de ambiente do arquivo .env
-# Isso garante que os.getenv() encontre nossas variáveis
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+class DefaultConfig:
+    DEBUG = False
+    TESTING = False
+    SECRET_KEY = os.getenv('SECRET_KEY', 'chave-padrao-insegura')
 
-class Config:
-    """Configurações base que servem para qualquer ambiente."""
-    # Desativa um recurso do SQLAlchemy que não usaremos e que emite avisos
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-class DevelopmentConfig(Config): # Adicionamos a herança de Config
-    """Configurações específicas para o ambiente de desenvolvimento."""
-    DEBUG = True # Ativa o modo de depuração do Flask
+class DevelopmentConfig(DefaultConfig):
+    DEBUG = True
+    TESTING = True
+    ENV = 'development'
+    FLASK_DEBUG = 1
+     """Configurações específicas para o ambiente de desenvolvimento."""
     
     # Busca cada variável de ambiente com seu nome correto
     DB_USER = os.getenv('POSTGRES_USER', 'default_user')
@@ -25,3 +23,7 @@ class DevelopmentConfig(Config): # Adicionamos a herança de Config
     
     # Monta a string de conexão do banco de dados
     SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}'
+
+class ProductionConfig(DefaultConfig):
+    DEBUG = False
+    ENV = 'production'
