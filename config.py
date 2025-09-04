@@ -3,6 +3,10 @@
 import os
 from dotenv import load_dotenv
 
+# Carrega as variáveis de ambiente do arquivo .env
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+
 class DefaultConfig:
     DEBUG = False
     TESTING = False
@@ -16,16 +20,23 @@ class DevelopmentConfig(DefaultConfig):
     FLASK_DEBUG = 1
     """Configurações específicas para o ambiente de desenvolvimento."""
     
-
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///crm_finance.db'
+    # PostgreSQL para desenvolvimento (mantém paridade com produção)
+    DB_USER = os.getenv('POSTGRES_USER', 'postgres')
+    DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', '1234') 
+    DB_NAME = os.getenv('POSTGRES_DB', 'crm_db') 
+    DB_HOST = os.getenv('DB_HOST', 'localhost')  # localhost para dev local, 'db' para Docker
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}'
     
-    # Configuração PostgreSQL (comentada para desenvolvimento local)
-    # DB_USER = os.getenv('POSTGRES_USER', 'default_user')
-    # DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'default_password') 
-    # DB_NAME = os.getenv('POSTGRES_DB', 'default_db') 
-    # DB_HOST = 'db' 
-    # SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}'
+    # SQLite como fallback (descomente se não tiver PostgreSQL instalado)
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///crm_finance.db'
 
 class ProductionConfig(DefaultConfig):
     DEBUG = False
     ENV = 'production'
+    
+    # Em produção, sempre use PostgreSQL
+    DB_USER = os.getenv('POSTGRES_USER', 'postgres')
+    DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', '1234') 
+    DB_NAME = os.getenv('POSTGRES_DB', 'crm_db') 
+    DB_HOST = os.getenv('DB_HOST', 'db')  # Container name no Docker
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}'
