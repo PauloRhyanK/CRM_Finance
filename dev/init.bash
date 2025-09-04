@@ -7,5 +7,5 @@ export FLASK_RUN_HOST=0.0.0.0
 export FLASK_RUN_PORT=5000
 
 # Ativa o ambiente virtual e executa o Flask
-source .venv/bin/activate
+source ../venv/bin/activate
 flask run
