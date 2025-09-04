@@ -24,7 +24,7 @@ def create_app(config_name='development'):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import User, Role
+    from .models import User, Transaction  
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

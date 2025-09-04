@@ -1,3 +1,11 @@
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+from datetime import datetime
+
+# Esta instância 'db' normalmente é criada no seu arquivo app/__init__.py
+db = SQLAlchemy()
+
 class Transaction(db.Model):
     __tablename__ = 'transaction'
 
