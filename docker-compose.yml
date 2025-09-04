@@ -1,18 +1,18 @@
 version: '3.8'
 services:
-  backend:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - FLASK_DEBUG=1
-      - FLASK_APP=src/app.py
-    volumes:
-      - .:/app
-    env_file:
-      - .env  # Carrega as variáveis do .env para a aplicação
-    depends_on:
-      - db    # Garante que o banco suba antes da aplicação
+  # backend:
+  #   build: .
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - FLASK_DEBUG=1
+  #     - FLASK_APP=src/app.py
+  #   volumes:
+  #     - .:/app
+  #   env_file:
+  #     - .env  # Carrega as variáveis do .env para a aplicação
+  #   depends_on:
+  #     - db    # Garante que o banco suba antes da aplicação
   db:
     image: postgres:13-alpine # Usando uma imagem oficial do Postgres
     environment:
