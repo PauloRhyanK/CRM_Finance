@@ -12,7 +12,7 @@ services:
   #   env_file:
   #     - .env  # Carrega as variáveis do .env para a aplicação
   #   depends_on:
-  #     - db    # Garante que o banco suba antes da aplicação
+  #     - db    # Garante que o banco suba antes da aplicaçã
   db:
     image: postgres:13-alpine # Usando uma imagem oficial do Postgres
     environment:
