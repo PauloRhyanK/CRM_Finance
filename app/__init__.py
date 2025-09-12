@@ -19,6 +19,8 @@ def create_app(config_name='development'):
     else:
         app.config.from_object('config.DefaultConfig')
 
+    print(app.config)
+    
     app.debug = app.config.get('DEBUG', False)
 
     db.init_app(app)

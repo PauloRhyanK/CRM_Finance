@@ -111,7 +111,7 @@ if __name__ == '__main__':
         print("=" * 50)
         print("🚀 Inicializando dados de exemplo...")
         print("=" * 50)
-        
+    
         try:
             create_admin_user()
             create_sample_user()
