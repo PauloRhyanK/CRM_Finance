@@ -2,5 +2,6 @@
 
 from .user_model import User
 from .transaction_model import Transaction
+from .customer_model import Customer
 
-__all__ = ['User', 'Transaction']
+__all__ = ['User', 'Transaction', 'Customer']

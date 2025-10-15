@@ -44,6 +44,12 @@ def get_all_blueprints():
         blueprints.append(auth_bp)
     except ImportError:
         pass
+    
+    try:
+        from .customer_routes import customer_bp
+        blueprints.append(customer_bp)
+    except ImportError:
+        pass
         
     
     return blueprints
