@@ -20,8 +20,11 @@ class Product(db.Model):
     
     vr_price = db.Column(Numeric(10, 2), CheckConstraint('vr_price >= 0'), nullable=False)
     
-    id_product_type = db.Column(db.Enum(ProductType), nullable=False, default=ProductType.PRODUTO)
-    
+    id_product_type = db.Column(
+        db.Enum(ProductType, values_callable=lambda obj: [e.value for e in obj]),
+        nullable=False,
+        default=ProductType.PRODUTO
+    )    
     dt_created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     dt_updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.utcnow)
     is_active = db.Column(db.Boolean, nullable=False, default=True)

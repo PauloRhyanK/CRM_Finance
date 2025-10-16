@@ -13,7 +13,7 @@ products_schema = ProductSchema(many=True)
 def create_product(product_data):
     """Cria um novo produto. Levanta exceções em caso de erro."""
     try:
-        product = product_schema.load(product_data)
+        product = product_schema.load(product_data, session=db.session)
         db.session.add(product)
         db.session.commit()
         return product
