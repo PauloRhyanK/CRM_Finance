@@ -1,17 +1,14 @@
+# app.py (Final Version)
+
 import os
 from app import create_app
+from config import config_by_name
 
-config_name = os.getenv('FLASK_CONFIG') or os.getenv('FLASK_ENV') or 'default'
-# Chama a nossa 'fábrica' para criar a instância da aplicação
-app = create_app(config_name)
-print(f"[DEBUG] app.debug = {app.debug}")
-print(f"[DEBUG] config_name = {config_name}")
+config_name = os.getenv('FLASK_ENV', 'default')
 
-# Make the app available for flask command
-application = app
+config_object = config_by_name[config_name]
+
+app = create_app(config_object)
 
 if __name__ == '__main__':
-    # O host='0.0.0.0' é importante para que a aplicação seja acessível
-    # de fora do contêiner Docker.
-    #app.run(host='0.0.0.0', port=5000)
-    app.run()
+    app.run(host='0.0.0.0')

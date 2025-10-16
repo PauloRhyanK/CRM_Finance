@@ -1,27 +1,18 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import DevelopmentConfig
 
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_app(config_name='development'):
+def create_app(config_object):  # <- MUDANÇA 1: Recebe o objeto de config
     """
     Função Application Factory.
     """
     app = Flask(__name__)
 
-    if config_name == "development":
-        app.config.from_object('config.DevelopmentConfig')
-    elif config_name == 'production':
-        app.config.from_object('config.ProductionConfig')
-    else:
-        app.config.from_object('config.DefaultConfig')
-
-    print(app.config)
-    
-    app.debug = app.config.get('DEBUG', False)
+    # Carrega a configuração diretamente do objeto recebido
+    app.config.from_object(config_object) # <- MUDANÇA 2
 
     db.init_app(app)
     migrate.init_app(app, db)

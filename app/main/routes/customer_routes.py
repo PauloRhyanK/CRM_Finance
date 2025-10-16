@@ -1,12 +1,11 @@
 from flask import Blueprint, request, jsonify
 from app.services import customer_service
-from app.middleware.encoding_middleware import safe_json_data, utf8_response, clean_dict_strings
 import uuid
 
 customer_bp = Blueprint('customer', __name__, url_prefix='/api/customers')
 
 @customer_bp.route('', methods=['POST'])
-@utf8_response
+
 def create_customer():
     """
     Cria um novo cliente.
@@ -25,18 +24,15 @@ def create_customer():
     }
     """
     try:
-        # Usa dados processados pelo middleware
-        data = safe_json_data()
+        # Obter dados JSON da requisição com tratamento de encoding
+        data = request.get_json()
         
         if not data:
             return {'error': 'Dados não fornecidos'}, 400
-        
-        # Limpa strings para garantir codificação correta
-        data = clean_dict_strings(data)
-        
         customer, message = customer_service.create_customer(data)
         
         if customer:
+            
             return {
                 'message': message,
                 'customer': customer.to_dict()
@@ -48,7 +44,6 @@ def create_customer():
         return {'error': f'Erro interno: {str(e)}'}, 500
 
 @customer_bp.route('', methods=['GET'])
-@utf8_response
 def get_customers():
     """
     Lista clientes com paginação e filtros.
@@ -90,7 +85,6 @@ def get_customers():
         return {'error': f'Erro interno: {str(e)}'}, 500
 
 @customer_bp.route('/<customer_id>', methods=['GET'])
-@utf8_response
 def get_customer(customer_id):
     """
     Busca um cliente específico pelo ID.
@@ -115,7 +109,6 @@ def get_customer(customer_id):
         return jsonify({'error': f'Erro interno: {str(e)}'}), 500
 
 @customer_bp.route('/<customer_id>', methods=['PUT'])
-@utf8_response
 def update_customer(customer_id):
     """
     Atualiza os dados de um cliente.
@@ -128,13 +121,10 @@ def update_customer(customer_id):
             return {'error': 'ID de cliente inválido'}, 400
         
         # Usa dados processados pelo middleware
-        data = safe_json_data()
+        data = request.get_json()
         
         if not data:
             return {'error': 'Dados não fornecidos'}, 400
-        
-        # Limpa strings para garantir codificação correta
-        data = clean_dict_strings(data)
         
         customer, message = customer_service.update_customer(customer_id, data)
         
@@ -150,7 +140,7 @@ def update_customer(customer_id):
         return jsonify({'error': f'Erro interno: {str(e)}'}), 500
 
 @customer_bp.route('/<customer_id>', methods=['DELETE'])
-@utf8_response
+
 def delete_customer(customer_id):
     """
     Remove um cliente (soft delete por padrão).
@@ -179,7 +169,7 @@ def delete_customer(customer_id):
         return jsonify({'error': f'Erro interno: {str(e)}'}), 500
 
 @customer_bp.route('/<customer_id>/activate', methods=['PATCH'])
-@utf8_response
+
 def activate_customer(customer_id):
     """
     Reativa um cliente desativado.
@@ -202,7 +192,7 @@ def activate_customer(customer_id):
         return jsonify({'error': f'Erro interno: {str(e)}'}), 500
 
 @customer_bp.route('/search', methods=['GET'])
-@utf8_response
+
 def search_customers():
     """
     Endpoint dedicado para busca de clientes.

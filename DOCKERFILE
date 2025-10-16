@@ -1,7 +1,14 @@
+# Dockerfile (Final Version)
+
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY src/ ./src/
+COPY app/ ./app/
+
+COPY config.py .
+COPY app.py .
+
 EXPOSE 5000
-CMD ["flask", "run", "--host=0.0.0.0"]
+
+CMD ["python", "app.py"]

@@ -1,31 +1,39 @@
+# docker-compose.yml
 services:
-  # backend:
-  #   build: .
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     - FLASK_DEBUG=1
-  #     - FLASK_APP=src/app.py
-  #   volumes:
-  #     - .:/app
-  #   env_file:
-  #     - .env  # Carrega as variáveis do .env para a aplicação
-  #   depends_on:
-  #     - db    # Garante que o banco suba antes da aplicaçã
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: crm_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+  backend:
+    build: .  # Constrói a imagem a partir do Dockerfile na pasta atual
+    container_name: crm_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ./app:/app/app  # Mapeia a tua pasta 'app' para dentro do container
+    env_file:
+      - .env          # Carrega as variáveis de ambiente do ficheiro .env
+    depends_on:
+      db:
+        condition: service_healthy # Garante que o banco suba e esteja saudável antes da aplicação
+
+  db:
+    image: postgres:16-alpine  # Versão 16, como pediste!
+    container_name: crm_db
+    restart: unless-stopped
+    environment:
+      # Estas variáveis são usadas pelo Postgres para a criação inicial do banco
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      # A configuração essencial para UTF-8
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=pt_BR.UTF-8"
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
 volumes:
   postgres_data:

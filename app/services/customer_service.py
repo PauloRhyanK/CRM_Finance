@@ -20,7 +20,6 @@ def create_customer(customer_data):
         for field in required_fields:
             if not customer_data.get(field):
                 return None, f"Campo obrigatório ausente: {field}"
-        
         # Criar novo cliente
         customer = Customer(
             ds_customer_name=customer_data['ds_customer_name'],
@@ -37,7 +36,7 @@ def create_customer(customer_data):
         # Validar CPF/CNPJ se fornecido
         if not customer.validate_cpf_cnpj():
             return None, "CPF/CNPJ em formato inválido"
-        
+
         db.session.add(customer)
         db.session.commit()
         
