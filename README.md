@@ -16,13 +16,20 @@ Este projeto foi construído utilizando as seguintes tecnologias e bibliotecas p
   
 ## 📁 Estrutura do Projeto
 
-O projeto utiliza uma estrutura modular para organizar o código de forma clara e escalável, seguindo o padrão *Application Factory*.
+O projeto utiliza uma arquitetura em camadas, seguindo o padrão *Application Factory* e *Blueprints* para garantir a máxima organização, testabilidade e escalabilidade.
 
-- **`manage.py` / `app.py`**: Pontos de entrada da aplicação. Responsáveis por carregar a configuração correta do ambiente e inicializar a aplicação Flask.
-- **`config.py`**: Define as classes de configuração para diferentes ambientes (Desenvolvimento, Produção), carregando informações sensíveis a partir de variáveis de ambiente.
-- **`app/__init__.py`**: Contém a função `create_app()`, que constrói e configura a instância da aplicação, inicializando extensões como o banco de dados e as migrações.
-- **`app/models.py`**: Onde os modelos do SQLAlchemy são definidos, representando as tabelas do banco de dados.
-- **`app/main/routes/`**: Diretório que contém os *blueprints* da API, com a lógica de cada endpoint (ex: `customer_routes.py`).
+- **`manage.py` / `app.py`**: Pontos de entrada da aplicação.
+- **`config.py`**: Define as configurações para os ambientes de desenvolvimento e produção.
+- **`app/__init__.py`**: Contém a fábrica `create_app()` que constrói a aplicação, inicializa extensões e regista os blueprints.
+
+- **`app/models/`**: **Camada de Dados**
+  - Define a estrutura do banco de dados através de modelos SQLAlchemy. Cada modelo (ex: `customer_model.py`) representa uma tabela.
+
+- **`app/services/`**: **Camada de Lógica de Negócio**
+  - Contém a lógica central da aplicação (ex: `customer_service.py`). As funções aqui orquestram as operações, como validar dados e interagir com os modelos para persistir informações no banco.
+
+- **`app/main/routes/`**: **Camada de Apresentação (API)**
+  - Define os endpoints da API utilizando Blueprints do Flask. Os ficheiros de rotas (ex: `customer_routes.py`) são responsáveis por receber os pedidos HTTP, chamar a camada de serviço apropriada e retornar a resposta ao cliente.
 
 ## ▶️ Como Executar o Projeto
 
@@ -55,6 +62,25 @@ Para executar este projeto em um ambiente de desenvolvimento, é necessário ter
 
 5.  **Pronto!** A API estará disponível no endereço `http://localhost:5000`.
 
+## 🗃️ Modelos de Dados (Estrutura do Banco)
+
+A base de dados do CRM é composta por três modelos principais que representam as entidades centrais do sistema.
+
+### 1. `User` (Usuário)
+- Representa um usuário do sistema (um funcionário da empresa, por exemplo).
+- Responsável pela autenticação e pelo registro de quem realizou as transações.
+- Campos principais: `id`, `nome`, `email` e `senha` (armazenada com hash seguro).
+
+### 2. `Customer` (Cliente)
+- Representa um cliente da empresa. É a entidade central do CRM.
+- Armazena todas as informações de contato, endereço e documentos do cliente.
+- Campos principais: `id`, `nome`, `email`, `telefone`, `CPF/CNPJ` e `endereço`.
+- Possui campos de controle como `data de criação`, `data de atualização` e `status de atividade`.
+
+### 3. `Transaction` (Transação)
+- Representa uma transação financeira (entrada ou saída) associada a um usuário.
+- *Futuramente, será associada também a um cliente.*
+- Campos principais: `id`, `valor`, `tipo de transação` e `data`.
 ## API Endpoints:
 
 - `GET /` - Página inicial

@@ -24,8 +24,7 @@ class Customer(db.Model):
     dt_customer_updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.utcnow)
     is_customer_active = db.Column(db.Boolean, nullable=False, default=True)
     
-    # Relacionamento com transações será adicionado quando necessário
-    # transactions = db.relationship('Transaction', backref='customer', lazy=True)
+    transactions = db.relationship('Transaction', backref='customer', lazy=True)    
     
     def to_dict(self):
         """Converte o objeto Customer para dicionário"""
