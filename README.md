@@ -120,3 +120,13 @@ A API é dividida em dois blueprints principais: Autenticação e Clientes.
 | `PUT`  | `/<customer_id>`          | Atualiza os dados de um cliente.                  | **Corpo (JSON):** Dados parciais ou completos do cliente.                   | `{ "message": "Cliente atualizado...", "customer": {...} }` |
 | `DELETE` | `/<customer_id>`        | Desativa (soft delete) ou remove um cliente.      | **Query:** `hard_delete=true` (opcional)                                      | `{ "message": "Cliente desativado/removido..." }`           |
 | `PATCH`  | `/<customer_id>/activate` | Reativa um cliente que foi desativado.            | -                                                                             | `{ "message": "Cliente reativado..." }`                     |
+
+### Produtos (`/api/products`)
+
+| Método | Rota             | Descrição                                         | Corpo/Parâmetros                                     | Resposta de Sucesso (200/201)                               |
+| :----- | :--------------- | :------------------------------------------------ | :--------------------------------------------------- | :-------------------------------------------------------- |
+| `POST` | `/`              | Cria um novo produto ou serviço.                  | **Corpo (JSON):** Dados completos do produto.        | `{ "message": "Produto criado...", "product": {...} }`    |
+| `GET`  | `/`              | Lista todos os produtos com paginação.            | **Query:** `page`, `per_page`                        | `{ "products": [...], "total": ..., "pages": ... }`       |
+| `GET`  | `/<product_id>`  | Obtém os detalhes de um produto específico.       | -                                                    | `{ "product": {...} }`                                    |
+| `PUT`  | `/<product_id>`  | Atualiza os dados de um produto.                  | **Corpo (JSON):** Dados parciais ou completos.       | `{ "message": "Produto atualizado...", "product": {...} }` |
+| `DELETE`| `/<product_id>` | Desativa (soft delete) ou remove um produto.      | **Query:** `hard_delete=true` (opcional)             | `{ "message": "Produto desativado/removido..." }`         |

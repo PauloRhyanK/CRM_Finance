@@ -24,3 +24,7 @@ class InvalidDataError(ServiceError):
     """Usado para erros de validação de dados de negócio, como CPF inválido."""
     def __init__(self, message, status_code=400):
         super().__init__(message, status_code)
+        
+class ProductNotFoundError(ServiceError):
+    def __init__(self, message="Produto ou serviço não encontrado."):
+        super().__init__(message, status_code=404)
