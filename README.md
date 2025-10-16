@@ -81,11 +81,35 @@ A base de dados do CRM é composta por três modelos principais que representam 
 - Representa uma transação financeira (entrada ou saída) associada a um usuário.
 - *Futuramente, será associada também a um cliente.*
 - Campos principais: `id`, `valor`, `tipo de transação` e `data`.
+
+
+## 🧠 Lógica de Negócio (Camada de Serviço)
+
+A lógica central da aplicação reside na camada de serviço (`app/services/`), que orquestra todas as operações de dados e regras de negócio.
+
+### Autenticação (`auth_service.py`)
+- **Registro de Novos Usuários:** Permite o cadastro de novos usuários, garantindo que o email seja único e armazenando a senha de forma segura com hash.
+- **Autenticação de Usuários:** Valida as credenciais (email e senha) para permitir o login no sistema.
+
+### Gerenciamento de Clientes (`customer_service.py`)
+- **CRUD Completo:** Implementa todas as operações de Criar, Ler, Atualizar e Deletar clientes.
+- **Paginação:** A listagem de clientes é paginada para garantir a performance da API, mesmo com um grande volume de dados.
+- **Busca Flexível:** Permite a busca de clientes por nome, email ou CPF/CNPJ.
+- **Soft Delete:** Ao invés de apagar um cliente permanentemente, o sistema por padrão apenas o marca como "inativo", preservando o histórico de dados. Há também a opção de reativar um cliente.
+
+
+
+
+
+
+
 ## API Endpoints:
 
 - `GET /` - Página inicial
 - `POST /auth/register` - Registro de usuário
 - `POST /auth/login` - Login de usuário
+
+
 
 ### Testando a API:
 
