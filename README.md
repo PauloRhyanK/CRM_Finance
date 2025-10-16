@@ -1,117 +1,59 @@
 # CRM FINANCE
+## ⚙️ Stack de Tecnologias
 
-## HOW TO START:
+Este projeto foi construído utilizando as seguintes tecnologias e bibliotecas principais:
 
-### Desenvolvimento Local (Recomendado):
+- **Backend:**
+  - **Flask:** Um micro-framework web leve e flexível para Python.
+  - **Flask-SQLAlchemy:** Extensão que integra o SQLAlchemy para Mapeamento Objeto-Relacional (ORM), facilitando a interação com o banco de dados.
+  - **Flask-Migrate:** Extensão para lidar com migrações de esquema do banco de dados utilizando o Alembic.
+- **Banco de Dados:**
+  - **PostgreSQL:** Um sistema de gerenciamento de banco de dados objeto-relacional poderoso e de código aberto.
+  - **Psycopg2:** O driver mais popular para conectar aplicações Python ao PostgreSQL.
+- **Ambiente e Configuração:**
+  - **Python-dotenv:** Para gerenciar variáveis de ambiente e manter as configurações seguras e separadas do código-fonte.
+  - **Docker:** Para containerização da aplicação e do banco de dados, garantindo um ambiente de desenvolvimento e produção consistente.
+  
+## 📁 Estrutura do Projeto
 
-1. **Instalar PostgreSQL:**
-```bash
-# Windows (usando Chocolatey)
-choco install postgresql
+O projeto utiliza uma estrutura modular para organizar o código de forma clara e escalável, seguindo o padrão *Application Factory*.
 
-# Ou baixar do site oficial: https://www.postgresql.org/download/windows/
-# Configurar usuário 'postgres' com senha '1234'
-```
+- **`manage.py` / `app.py`**: Pontos de entrada da aplicação. Responsáveis por carregar a configuração correta do ambiente e inicializar a aplicação Flask.
+- **`config.py`**: Define as classes de configuração para diferentes ambientes (Desenvolvimento, Produção), carregando informações sensíveis a partir de variáveis de ambiente.
+- **`app/__init__.py`**: Contém a função `create_app()`, que constrói e configura a instância da aplicação, inicializando extensões como o banco de dados e as migrações.
+- **`app/models.py`**: Onde os modelos do SQLAlchemy são definidos, representando as tabelas do banco de dados.
+- **`app/main/routes/`**: Diretório que contém os *blueprints* da API, com a lógica de cada endpoint (ex: `customer_routes.py`).
 
-2. **Criar banco de dados:**
-```bash
-# Conectar ao PostgreSQL
-psql -U postgres
+## ▶️ Como Executar o Projeto
 
-# Criar banco
-CREATE DATABASE crm_db;
-\q
-```
+Para executar este projeto em um ambiente de desenvolvimento, é necessário ter o **Docker** e o **Docker Compose** instalados.
 
-3. **Instalar dependências Python:**
-```bash
-pip install -r requirements.txt
-```
+1.  **Clone o repositório:**
+    ```bash
+    git clone <URL_DO_SEU_REPOSITORIO>
+    cd <NOME_DO_PROJETO>
+    ```
 
-4. **Inicializar banco de dados:**
-```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
-```
+2.  **Crie o ficheiro de ambiente:**
+    Copie o ficheiro de exemplo `.env.example` para um novo ficheiro chamado `.env`.
+    ```bash
+    cp .env.example .env
+    ```
+    *Revise o ficheiro `.env` e ajuste as variáveis se necessário.*
 
-5. **Executar aplicação:**
+3.  **Suba os contêineres:**
+    Este comando irá construir a imagem da aplicação Flask e iniciar o contêiner do PostgreSQL.
+    ```bash
+    docker-compose up --build -d
+    ```
 
-**Windows PowerShell (Recomendado):**
-```powershell
-./init.ps1
-```
+4.  **Execute as migrações do banco de dados:**
+    Com os contêineres em execução, aplique o esquema do banco de dados pela primeira vez.
+    ```bash
+    docker-compose exec -e FLASK_APP=manage.py backend flask db upgrade
+    ```
 
-**Windows Command Prompt:**
-```cmd
-init.bat
-```
-
-**Linux/Unix/WSL:**
-```bash
-chmod +x init.bash
-./init.bash
-```
-
-**Ou manualmente:**
-```powershell
-# PowerShell
-$env:FLASK_APP = "app.py"
-C:/Programs/Repositorios/Faculdade/CRM_Finance/.venv/Scripts/python.exe app.py
-
-# Ou simplesmente
-python app.py
-```
-
-### Docker (Produção):
-
-- **Build:**
-```bash
-docker build -t crm-backend .
-```
-
-- **Rodar Container:**
-```bash
-docker run crm-backend
-```
-
-**Docker Compose:**
-```bash
-# Roda em background (detached)
-docker-compose up -d
-
-# Rebuilda as imagens antes de subir
-docker-compose up --build
-
-# Para parar tudo
-docker-compose down
-
-# Ver logs
-docker-compose logs backend
-docker-compose logs database
-
-# Entrar no container
-docker-compose exec backend bash
-```
-
-## Estrutura do Projeto:
-
-```
-├── app/
-│   ├── __init__.py          # Application Factory
-│   ├── main/
-│   │   ├── routes/          # Rotas organizadas
-│   │   │   ├── auth_routes.py
-│   │   │   └── route_manager.py
-│   │   └── services/        # Lógica de negócio
-│   └── models/              # Modelos do banco de dados
-├── config.py                # Configurações
-├── app.py                   # Ponto de entrada
-├── requirements.txt         # Dependências Python
-├── init.ps1                 # Script inicialização Windows PowerShell
-├── init.bat                 # Script inicialização Windows CMD
-└── init.bash                # Script inicialização Linux/Unix
-```
+5.  **Pronto!** A API estará disponível no endereço `http://localhost:5000`.
 
 ## API Endpoints:
 

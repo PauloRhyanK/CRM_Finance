@@ -17,8 +17,7 @@ def create_app(config_object):  # <- MUDANÇA 1: Recebe o objeto de config
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import User, Transaction, Customer  
-
+    from . import models
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     

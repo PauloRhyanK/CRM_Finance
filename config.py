@@ -31,6 +31,9 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Configurações para produção."""
     DEBUG = False
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    if not SECRET_KEY:
+        raise ValueError("A variável de ambiente SECRET_KEY não foi definida para produção.")
 
 # Mapeamento para facilitar a seleção no create_app
 config_by_name = {
