@@ -1,8 +1,8 @@
-"""Criação inicial das tabelas para PostgreSQL
+"""Criação inicial das tabelas com tipos corretos
 
-Revision ID: 567454f5dd0a
+Revision ID: bd1e6d0e4feb
 Revises: 
-Create Date: 2025-10-16 01:08:33.644969
+Create Date: 2025-10-16 01:41:35.801259
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '567454f5dd0a'
+revision = 'bd1e6d0e4feb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -48,11 +48,13 @@ def upgrade():
     )
     op.create_table('transaction',
     sa.Column('cd_transaction', sa.UUID(), nullable=False),
-    sa.Column('vr_transaction', sa.Float(), nullable=False),
-    sa.Column('id_transaction_type', sa.Integer(), nullable=False),
+    sa.Column('vr_transaction', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('id_transaction_type', sa.Enum('ENTRADA', 'SAIDA', name='transactiontype'), nullable=False),
     sa.Column('dt_transaction', sa.Date(), nullable=False),
     sa.Column('dt_transaction_created', sa.DateTime(), nullable=False),
     sa.Column('cd_user', sa.UUID(), nullable=False),
+    sa.Column('cd_customer', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['cd_customer'], ['customer.cd_customer'], ),
     sa.ForeignKeyConstraint(['cd_user'], ['user.cd_user'], ),
     sa.PrimaryKeyConstraint('cd_transaction')
     )

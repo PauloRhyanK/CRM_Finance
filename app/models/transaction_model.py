@@ -1,4 +1,6 @@
+import enum  
 from app import db
+from sqlalchemy import Numeric 
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
