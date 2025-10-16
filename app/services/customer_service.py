@@ -6,6 +6,7 @@ from app.schemas.customer_schema import CustomerSchema
 from app.util.exceptions import CustomerNotFoundError, InvalidDataError
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import or_
 
 customer_schema = CustomerSchema()
 customers_schema = CustomerSchema(many=True) # Esquema para listas de clientes
@@ -69,6 +70,36 @@ def delete_customer(customer_id, soft_delete=True):
     # Para delete, podemos não retornar nada ou uma mensagem de sucesso
     return True
 
-# Funções de listagem e busca geralmente não levantam exceções,
-# apenas retornam listas (vazias ou não) ou dicionários. Seu código para elas já está bom!
-# ... (get_all_customers, search_customers, activate_customer continuam como estão) ...
+def get_customers_list(args):
+    """
+    Retorna uma lista paginada de clientes, aplicando filtros de busca e status.
+    
+    Args:
+        args (dict): Dicionário contendo os parâmetros da query string.
+                     Ex: {'page': 1, 'per_page': 10, 'search_term': '...'}
+    """
+    page = args.get('page', 1)
+    per_page = args.get('per_page', 20)
+    active_only = args.get('active_only', True)
+    search_term = args.get('search_term')
+
+    query = Customer.query
+
+    if active_only:
+        query = query.filter(Customer.is_customer_active == True)
+
+    if search_term:
+        # Cria uma condição de busca que procura o termo em vários campos
+        search_filter = f"%{search_term}%"
+        conditions = [
+            Customer.ds_customer_name.ilike(search_filter),
+            Customer.ds_customer_email.ilike(search_filter),
+            Customer.ds_customer_cpf_cnpj.ilike(search_filter)
+        ]
+        query = query.filter(or_(*conditions))
+
+    # A paginação é sempre aplicada no final
+    paginated = query.order_by(Customer.ds_customer_name).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    return paginated
